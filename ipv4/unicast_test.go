@@ -20,7 +20,7 @@ import (
 
 func TestPacketConnReadWriteUnicastUDP(t *testing.T) {
 	switch runtime.GOOS {
-	case "fuchsia", "hurd", "js", "nacl", "plan9", "wasip1", "windows":
+	case "fuchsia", "hurd", "js", "nacl", "plan9", "wasip1":
 		t.Skipf("not supported on %s", runtime.GOOS)
 	}
 	// Skip this check on z/OS since net.Interfaces() does not return loopback, however
@@ -163,6 +163,10 @@ func TestPacketConnReadWriteUnicastICMP(t *testing.T) {
 }
 
 func TestRawConnReadWriteUnicastICMP(t *testing.T) {
+	switch runtime.GOOS {
+	case "windows":
+		t.Skipf("test hangs on windows when run as Administrator")
+	}
 	if !nettest.SupportsRawSocket() {
 		t.Skipf("not supported on %s/%s", runtime.GOOS, runtime.GOARCH)
 	}
